@@ -1,0 +1,5 @@
+Using TABLOCK as query hint.
+Dropping Indexes during Bulk Load operation and then once it is completed then recreating them.
+Changing the Recovery model of database to be BULK_LOGGED during the load operation.
+If the target has Clustered Index then specifying ORDER BY clause in the bulk insert operation will increase the speed of BULK loading.
+Using Trace Flag 610 at the beginning of BULK INSERT operation.

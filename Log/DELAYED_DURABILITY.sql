@@ -1,0 +1,5 @@
+sp_msforeachdb
+'
+Print ''?''
+ALTER DATABASE [?] SET DELAYED_DURABILITY = FORCED WITH NO_WAIT'
+GO

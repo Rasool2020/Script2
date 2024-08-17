@@ -1,0 +1,19 @@
+-T1117		Causes files in a filegroup to grow at the same time. Most often used for tempdb, but affects all databases.
+-T1118		Removes the use of mixed extents. Most often used to help with tempdb contention.
+-T1204		Returns resources involved with a deadlock.
+-T1222		Returns resources involved with a deadlock in XML format.
+-T2371		Lowers the threshold for automatic statistics updates to occur based on table size. Good for VLDBs.
+-T2467		CPU scheduling – place threads on the least loaded node.
+-T3605		Used alongside 1204 and 1222 to send deadlock information to the error log.
+-T3895		Memory-Optimized TempDB Metadata, Undocumented trace flag
+-T9567	    Enables compression of the data stream for Availability Groups during automatic seeding
+-T610		Minimal Logg generation for bulk insert
+-T460		Replace error message ID 8152 with message ID 2628 (String or binary data would be truncated. The statement has been terminated.). 
+-T7745 	    Forces Query Store to not flush data to disk on database shutdown.
+-T7752		Enables asynchronous load of Query Store.
+
+-T610
+-T2371
+-T2467
+-T3895
+-T9567

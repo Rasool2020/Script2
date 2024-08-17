@@ -1,0 +1,4 @@
+CREATE CERTIFICATE CerEndPoint
+   ENCRYPTION BY PASSWORD = 'Fwerfh23g3G$4398r23kra!'  
+   WITH SUBJECT = 'EndPoint AlwaysOn',   
+   EXPIRY_DATE = '20291121';  

@@ -1,0 +1,1 @@
+Update Kala Set firstfee=0

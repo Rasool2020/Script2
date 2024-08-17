@@ -1,0 +1,12 @@
+A significant part of sql server process memory has been paged out. 
+
+DO This:
+Click Start, click Run, type gpedit.msc, and then click OK.
+Note The Group Policy dialog box appears.
+Expand Computer Configuration, and then expand Windows Settings.
+Expand Security Settings, and then expand Local Policies.
+Click User Rights Assignment, and then double-click Lock pages in memory.
+In the Local Security Policy Setting dialog box, click Add User or Group.
+In the Select Users or Groups dialog box, add the account that has permission to run the Sqlservr.exe file, and then click OK.
+Close the Group Policy dialog box.
+Restart the SQL Server service.

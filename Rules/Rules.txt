@@ -1,0 +1,91 @@
+1 - Don't Use With(nolock)
+2 - Don't Use NVARCHAR(MAX)
+
+3 - Index Convention:
+IX_TableName_ColumnName
+
+PK	=>	Primary Index
+IX	=>	Regular Index
+IXF	=>	Filter Index
+IXU	=>	Unique Index
+IXC	=>	Column Store Index
+IXM	=>	Missing Index
+IXS	=>	Sparse Index
+IXH	=>	Hash Index
+IXY	=>	hypothetical Index
+
+IXMUF..
+
+4 - Non-SARGable Predicates:
+
+function(column) = something
+column + column = something
+column + value = something
+column = @something or @something IS NULL
+column like ‘%something%’
+column = case when …
+column = Isnull(@Var, value)
+Don't Use Casting 
+
+5 - Don't Use Null
+
+Use Default Value Instead of NUll
+Use Null Only For Foreing Key When data can be absent
+
+6 - Use int, SmallInt Instead BIGINT for Primary key 
+
+7 - Don't Make Index On Clustered Index
+
+8 - Set OPTIMIZE_FOR_SEQUENTIAL_KEY On, On Table Creation For Primary Key
+
+9 - Don't Use Profiler in Main Server
+
+10 - Don't Use float data type
+
+11 - Put "SET NOCOUNT ON" at first Line of Your Stored Procedures
+
+12 - PUT Order By In User Output Queries if if Order is important.
+
+13 - Don't Use Order By in Views.
+
+14 - Use IF EXISTS (SELECT 1
+
+15 - Don't Use * in Select Statments
+                               
+16 - Set Character Size based 2 Exponents
+	Like 16, 32, 64, 128
+	Or 32 + 16, 64 + 32
+
+17 - Use Sorting And Aggrigating Based on Primary Key Every where is Possible
+	
+Select Max(CreateDate)
+From 
+	(Select top 32 CreateDate
+	From financial.TbTourismInvoice
+	Order By TourismInvoiceID Desc) t
+Go
+Select Max(CreateDate)
+From financial.TbTourismInvoice
+
+18 - Don't Use Keywords in Naming of objects(Table, Column,...)
+
+19 - Use Exception Handling in SPs
+
+20 - Write Queries With FullName :
+	
+Select c.name, c.tatile
+from customer c
+Where c.code = 1
+
+21 - Write Comment Wherever is Necessary
+
+22 - Use aliases for table names
+
+23 - Don't Use Order By in subQueries
+
+24 - Use RecordStatus Instead of Status
+	bitWise Commands
+
+25 - Code Review
+
+26 - 

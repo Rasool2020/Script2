@@ -1,0 +1,4 @@
+SYSREP
+SET FQDN
+SET ETC\Hosts
+Install File Cluster

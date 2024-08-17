@@ -1,0 +1,20 @@
+Disable Hot Plug CPU
+Set 1 Socket For each CPU
+Reserve Memory For VM
+Reserve Disk For VM
+	>>	Thick provisioned eagerly zeroed
+Install VMWare Tools
+Set Power Policy
+	High Performance
+	
+Numa:
+	Numa AutoSize=>True
+	Numa AutoSize Once=>False
+	VMX Reboot PowerCycle=>True
+	
+Network:
+	VNEXT3
+
+Install:
+v-Locity
+DymaxIO

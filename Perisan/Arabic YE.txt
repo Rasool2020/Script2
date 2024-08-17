@@ -1,0 +1,11 @@
+SELECT ROW_NUMBER() OVER(ORDER BY Customer_Code DESC) AS Row,
+REPLACE(customer_name , NCHAR(1610), NCHAR(1740)) as customer_name,customer_name
+Customer_Code FROM t00Customer
+WHERE ID > 0
+ORDER BY Customer_name
+--"í", "í"
+Go
+SELECT ROW_NUMBER() OVER(ORDER BY Customer_Code DESC) AS Row,
+REPLACE(customer_name , 'í' , 'í') as customer_name ,
+Customer_Code FROM t00Customer
+WHERE ID > 0

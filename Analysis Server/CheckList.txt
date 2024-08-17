@@ -1,0 +1,7 @@
+<Gen2ServerKey>1</Gen2ServerKey> to: 
+<Gen2ServerKey>0</Gen2ServerKey> 
+in Program Files\Microsoft SQL Server\MSAS16.MSSQLSERVER\OLAP\Config\msmdsrv
+
+
+
+Or Remove <Gen2ServerKey>1</Gen2ServerKey>

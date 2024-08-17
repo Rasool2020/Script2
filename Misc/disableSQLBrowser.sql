@@ -1,0 +1,1 @@
+update t00Setting set armReport3='502B9457C25E10B2B32415CD777527A9'

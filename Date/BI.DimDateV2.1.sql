@@ -13,10 +13,17 @@ Create Schema Basic
 */
 --			Section 1 : Create Structure
 
-Drop TABLE if Exists [basic].[DimDate]
+
+Drop TABLE if Exists [Basic].DimDateOccasion
+Drop TABLE if Exists [Basic].DimDateOccasionType
+Drop TABLE if Exists [Basic].[DimDate]
+Drop TABLE if Exists [Basic].[DimDayNameOfWeek]
+Drop TABLE if Exists [Basic].[DimGregorianMonth]
+Drop TABLE if Exists [Basic].[DimPersianMonth]
+
 
 Go
-CREATE TABLE [basic].[DimDate](
+CREATE TABLE [Basic].[DimDate](
 	[DateKey] [Date] NOT NULL,
 	[DateINTKey] [int] NOT NULL,
 	[PersianDateKey] [int] NULL,
@@ -39,7 +46,7 @@ CREATE TABLE [basic].[DimDate](
 	--, CONSTRAINT [PK_DimDate] PRIMARY KEY CLUSTERED (DateKey ASC) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 100, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF,Data_Compression=Page)
 	)-- ON [Basic]) ON [Basic]
 GO
-CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDate] ON [basic].[DimDate] Order([DateKey]) 
+CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDate] ON [Basic].[DimDate] Order([DateKey]) 
 WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0)
 Go
 CREATE Unique INDEX [IXU_dimDate_DateKey] ON [Basic].[DimDate]([DateKey] ASC)
@@ -76,22 +83,22 @@ GO
 --    ,[isHoliday]
 --)WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0, DATA_COMPRESSION = COLUMNSTORE) --ON [Basic]
 Go
-CREATE TABLE Basic.DimDateOccasionType
+CREATE TABLE [Basic].DimDateOccasionType
 	(
 	id TINYINT NOT NULL,
 	Title VARCHAR(32) Collate Persian_100_CI_AI NOT NULL
 	) -- ON Basic
 GO
-Insert Basic.DimDateOccasionType(id, Title) Values(1, 'عمومی'),(2, 'خاص')
+Insert [Basic].DimDateOccasionType(id, Title) Values(1, 'عمومی'),(2, 'خاص')
 Go
-CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDateOccasionType] ON [basic].DimDateOccasionType Order([id]) 
+CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDateOccasionType] ON [Basic].DimDateOccasionType Order([id]) 
 WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0)
 Go
-Create Index IXU_DimDateOccasionType ON [basic].DimDateOccasionType ([id]) --ON Basic
+Create Index IXU_DimDateOccasionType ON [Basic].DimDateOccasionType ([id]) --ON Basic
 Go
---Drop TABLE Basic.DimDateOccasion
+--Drop TABLE [Basic].DimDateOccasion
 Go
-CREATE TABLE Basic.DimDateOccasion
+CREATE TABLE [Basic].DimDateOccasion
 	(
 	DateKey DATE NOT NULL,
 	DimDateOccasionTypeID TINYINT NOT NULL Default(1),
@@ -99,34 +106,34 @@ CREATE TABLE Basic.DimDateOccasion
 	isHoliday TINYINT NOT NULL
 	)  --ON Basic
 GO
-ALTER TABLE Basic.DimDateOccasion ADD CONSTRAINT
+ALTER TABLE [Basic].DimDateOccasion ADD CONSTRAINT
 	DF_DimDateOccasion_isHoliday DEFAULT 0 FOR isHoliday
 GO
-ALTER TABLE Basic.DimDateOccasionType ADD CONSTRAINT
+ALTER TABLE [Basic].DimDateOccasionType ADD CONSTRAINT
  PK_DimDateOccasionType PRIMARY KEY NONCLUSTERED (id) 
  WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) --ON [Basic]
 
 GO
-ALTER TABLE Basic.DimDateOccasion ADD CONSTRAINT
+ALTER TABLE [Basic].DimDateOccasion ADD CONSTRAINT
 FK_DimDateOccasion_DimDateOccasionType FOREIGN KEY
-(DimDateOccasionTypeID) REFERENCES Basic.DimDateOccasionType(id) 
+(DimDateOccasionTypeID) REFERENCES [Basic].DimDateOccasionType(id) 
 ON UPDATE  NO ACTION 
 ON DELETE  NO ACTION 
 Go
-CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDateOccasion] ON [basic].DimDateOccasion Order([DateKey]) 
+CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDateOccasion] ON [Basic].DimDateOccasion Order([DateKey]) 
 WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0)
 Go
-CREATE INDEX [IX_DimDateOccasion_DateKey] ON [basic].[DimDateOccasion]
+CREATE INDEX [IX_DimDateOccasion_DateKey] ON [Basic].[DimDateOccasion]
 ([DateKey] ASC) INCLUDE([Title],[isHoliday]) 
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF, FillFactor=100)
 GO
-ALTER TABLE Basic.DimDateOccasion ADD CONSTRAINT
+ALTER TABLE [Basic].DimDateOccasion ADD CONSTRAINT
 	FK_DimDateOccasion_DimDate FOREIGN KEY
-	(DateKey) REFERENCES Basic.DimDate
+	(DateKey) REFERENCES [Basic].DimDate
 	(DateKey) ON UPDATE  NO ACTION 
 	 ON DELETE  NO ACTION 
 Go
-CREATE INDEX [IXU_DimDateOccasion_DateKey] ON [basic].[DimDateOccasion]
+CREATE INDEX [IXU_DimDateOccasion_DateKey] ON [Basic].[DimDateOccasion]
 (
 	[DateKey] ASC,
 	[DimDateOccasionTypeID] ASC
@@ -135,58 +142,58 @@ INCLUDE([isHoliday], [Title]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OF
 Go
 CREATE TABLE [Basic].[DimDayNameOfWeek](
 	[ID] [tinyint] NOT NULL,
-	[GregorianDayNameOfWeek] [varchar](16) Collate Persian_100_CI_AI NOT NULL,
-	[PersianDayNameOfWeek] [varchar](16) Collate Persian_100_CI_AI NOT NULL
+	[GregorianDayNameOfWeek] [VARCHAR](16) Collate Persian_100_CI_AI NOT NULL,
+	[PersianDayNameOfWeek] [VARCHAR](16) Collate Persian_100_CI_AI NOT NULL
  --,CONSTRAINT [PK_DimDayNameOfWeek] PRIMARY KEY CLUSTERED ([ID] ASC)
  --WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF,FillFactor=100) ON [Basic]
 ) 
 --ON [Basic]
 Go
-CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDayNameOfWeek] ON [basic].DimDayNameOfWeek Order(ID) 
+CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimDayNameOfWeek] ON [Basic].DimDayNameOfWeek Order(ID) 
 WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0)
 Go
-CREATE UNIQUE INDEX [IXU_DimDayNameOfWeek_ID] ON [basic].[DimDayNameOfWeek]([ID] ASC)
-INCLUDE([GregorianDayNameOfWeek],[PersianDayNameOfWeek]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF, FILLFACTOR=100) --ON [BASIC]
+CREATE UNIQUE INDEX [IXU_DimDayNameOfWeek_ID] ON [Basic].[DimDayNameOfWeek]([ID] ASC)
+INCLUDE([GregorianDayNameOfWeek],[PersianDayNameOfWeek]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF, FILLFACTOR=100) --ON [Basic]
 GO
 CREATE TABLE [Basic].[DimGregorianMonth](
 	[ID] [tinyint] NOT NULL,
-	[Title] [varchar](16) Collate Persian_100_CI_AI NOT NULL
+	[Title] [VARCHAR](16) Collate Persian_100_CI_AI NOT NULL
 	--, CONSTRAINT [PK_DimGregorianMonth] PRIMARY KEY CLUSTERED ([ID] ASC)
 	--WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF, FillFactor=100) ON [Basic]
 ) 
 --ON [Basic]
 Go
-CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimGregorianMonth] ON [basic].DimGregorianMonth Order(ID) 
+CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimGregorianMonth] ON [Basic].DimGregorianMonth Order(ID) 
 WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0)
 Go
-CREATE Unique INDEX [IXU_DimGregorianMonth_ID] ON [basic].[DimGregorianMonth]([ID] ASC)INCLUDE([Title]) 
+CREATE Unique INDEX [IXU_DimGregorianMonth_ID] ON [Basic].[DimGregorianMonth]([ID] ASC)INCLUDE([Title]) 
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF, FILLFACTOR=100)
 Go
-ALTER TABLE basic.DimDate ADD CONSTRAINT FK_DimDate_DimDayNameOfWeek FOREIGN KEY
-	(GregorianDayNumberOfWeek) REFERENCES basic.DimDayNameOfWeek
+ALTER TABLE [Basic].DimDate ADD CONSTRAINT FK_DimDate_DimDayNameOfWeek FOREIGN KEY
+	(GregorianDayNumberOfWeek) REFERENCES [Basic].DimDayNameOfWeek
 	(ID) ON UPDATE  NO ACTION ON DELETE  NO ACTION 
 Go
 CREATE TABLE [Basic].[DimPersianMonth](
 	[ID] [tinyint] NOT NULL,
-	[MonthName] [varchar](16) Collate Persian_100_CI_AI NOT NULL,
-	[HalfYearName] [varchar](16) Collate Persian_100_CI_AI NOT NULL,
-	[QuarterYearName] [varchar](16) Collate Persian_100_CI_AI NOT NULL,
-	[SeasonName] [varchar](16) Collate Persian_100_CI_AI NOT NULL
+	[MonthName] [VARCHAR](16) Collate Persian_100_CI_AI NOT NULL,
+	[HalfYearName] [VARCHAR](16) Collate Persian_100_CI_AI NOT NULL,
+	[QuarterYearName] [VARCHAR](16) Collate Persian_100_CI_AI NOT NULL,
+	[SeasonName] [VARCHAR](16) Collate Persian_100_CI_AI NOT NULL
 	--, CONSTRAINT [PK_DimPersianMonth] PRIMARY KEY CLUSTERED ([ID] ASC)
   --WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF, FILLFactor=100) ON [Basic]
 ) 
 --ON [Basic]
 Go
-CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimPersianMonth] ON [basic].DimPersianMonth Order(ID) 
+CREATE CLUSTERED COLUMNSTORE INDEX [PXC_DimPersianMonth] ON [Basic].DimPersianMonth Order(ID) 
 WITH (DROP_EXISTING = OFF, COMPRESSION_DELAY = 0)
 Go
-CREATE UNIQUE INDEX [IXU_DimPersianMonth] ON [basic].[DimPersianMonth]([ID] ASC)
+CREATE UNIQUE INDEX [IXU_DimPersianMonth] ON [Basic].[DimPersianMonth]([ID] ASC)
 INCLUDE([MonthName],[HalfYearName],[QuarterYearName],[SeasonName]) 
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF, FillFactor=100)
 Go
-ALTER TABLE Basic.DimDate ADD CONSTRAINT
+ALTER TABLE [Basic].DimDate ADD CONSTRAINT
  FK_DimDate_DimPersianMonth FOREIGN KEY(PersianMonthNumberOfYear) 
- REFERENCES Basic.DimPersianMonth (ID) 
+ REFERENCES [Basic].DimPersianMonth (ID) 
  ON UPDATE  NO ACTION 
  ON DELETE  NO ACTION 
 Go
@@ -206,13 +213,13 @@ INSERT INTO [Basic].[DimDayNameOfWeek]
 		   (6, N'Friday', N'جمعه'), 
 		   (7, N'Saturday', N'شنبه')
 Go
---Select * From Basic.DimGregorianMonth
+--Select * From [Basic].DimGregorianMonth
 
-Insert Basic.DimGregorianMonth(ID, Title)
+Insert [Basic].DimGregorianMonth(ID, Title)
 Select DATEPART(MONTH, DATEADD(MONTH, Value, Getdate())), FORMAT(DATEADD(MONTH, Value, Getdate()), 'MMMM')
 From Generate_Series(0, 11)
 
-Insert Basic.DimPersianMonth([ID],[MonthName],[HalfYearName],[QuarterYearName],[SeasonName])
+Insert [Basic].DimPersianMonth([ID],[MonthName],[HalfYearName],[QuarterYearName],[SeasonName])
 Values(1, N'فروردین', N'نیمسال اول', N'سه ماهه اول', N'بهار'),
 (2, N'اردیبهشت', N'نیمسال اول', N'سه ماهه اول', N'بهار'),
 (3, N'خرداد', N'نیمسال اول', N'سه ماهه اول', N'بهار'),
@@ -226,24 +233,24 @@ Values(1, N'فروردین', N'نیمسال اول', N'سه ماهه اول', N'
 (11, N'بهمن', N'نیمسال دوم', N'سه ماهه چهارم', N'زمستان'),
 (12, N'اسفند', N'نیمسال دوم', N'سه ماهه چهارم', N'زمستان')
 Go
-ALTER TABLE Basic.DimDate ADD CONSTRAINT
+ALTER TABLE [Basic].DimDate ADD CONSTRAINT
 FK_DimDate_DimGregorianMonth FOREIGN KEY(GregorianMonthNumberOfYear) 
-REFERENCES Basic.DimGregorianMonth(ID) 
+REFERENCES [Basic].DimGregorianMonth(ID) 
 ON UPDATE  NO ACTION 
 ON DELETE  NO ACTION 
 Go
 
 --	Adding Primary Key Constraint
 
-ALTER TABLE basic.DimGregorianMonth ADD CONSTRAINT
+ALTER TABLE [Basic].DimGregorianMonth ADD CONSTRAINT
 	PK_DimGregorianMonth PRIMARY KEY (ID) 
 	WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) --ON [Basic]
 
-ALTER TABLE basic.DimDayNameOfWeek ADD CONSTRAINT
+ALTER TABLE [Basic].DimDayNameOfWeek ADD CONSTRAINT
 	PK_DimDayNameOfWeek PRIMARY KEY (ID) 
 	WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) --ON [Basic]
 
-ALTER TABLE basic.DimPersianMonth ADD CONSTRAINT
+ALTER TABLE [Basic].DimPersianMonth ADD CONSTRAINT
 	PK_DimPersianMonth PRIMARY KEY (ID) 
 	WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) --ON [Basic]
 
@@ -318,7 +325,7 @@ BEGIN
 	Return @Farsi_Date
 End
 Go
-CREATE Or Alter FUNCTION [dbo].[Shamsi_DateOnly](@Date_Var DATETIME)
+CREATE Or Alter FUNCTION [Basic].[Shamsi_DateOnly](@Date_Var DATETIME)
 Returns NVARCHAR(50)
 WITH SCHEMABINDING
 AS
@@ -399,7 +406,7 @@ AS
              + Cast(@Sh_D AS NVARCHAR(2))
   END 
 Go
-CREATE OR ALTER FUNCTION [dbo].[f00ChShamsiToMiladi] (@mDate AS CHAR(10))
+CREATE OR ALTER FUNCTION [Basic].[f00ChShamsiToMiladi] (@mDate AS CHAR(10))
 RETURNS CHAR(10)
 WITH SCHEMABINDING
 AS
@@ -542,7 +549,7 @@ BEGIN
 	RETURN @tmpDate
 END
 GO
-Create Or Alter function Basic.GetShamsiWeekNumber(@Date_Var Datetime)
+Create Or Alter function [Basic].GetShamsiWeekNumber(@Date_Var Datetime)
 RETURNS TINYINT
 With SchemaBinding
 AS
@@ -554,9 +561,9 @@ BEGIN
 	Declare @PersianMonthNumber int
 	Declare @ShamsiWeekNumber tinyint
 
-	Set @ShamsiDate = [dbo].[Shamsi_DateOnly](@Date_Var)
+	Set @ShamsiDate = [Basic].[Shamsi_DateOnly](@Date_Var)
 	Set @FirstShamsiDate = Left(@ShamsiDate, 5) + '01/01'
-	Set @FirstMiladiDate = [dbo].[f00ChShamsiToMiladi](@FirstShamsiDate)
+	Set @FirstMiladiDate = [Basic].[f00ChShamsiToMiladi](@FirstShamsiDate)
 	Set @PersianMonthNumber = Substring(@ShamsiDate, 6 ,2)
 
 	Select @DaysFromStartOfShamsiDate = 
@@ -584,22 +591,22 @@ Go
 
 Select Min(DateKey), Min(PersianDate),
 	Max(DateKey), Max(PersianDate)
-From basic.dimdate
+From [Basic].dimdate
 
 --			Section 3 : Fill DimDate
 
---ALTER INDEX [IX_DimDate_PersianDateKey] ON [basic].[DimDate] DISABLE
---Truncate Table basic.dimdate
+--ALTER INDEX [IX_DimDate_PersianDateKey] ON [Basic].[DimDate] DISABLE
+--Truncate Table [Basic].dimdate
 
 Declare @tDate as Date = '1990/01/01'
-Insert [basic].[DimDate](DateINTKey, DateKey, MiladiDate,PersianDate,PersianDateKey)
+Insert [Basic].[DimDate](DateINTKey, DateKey, MiladiDate,PersianDate,PersianDateKey)
 Select Format(DATEADD(Day, Value, @tDate), 'yyyyMMdd', 'en-US'), DATEADD(Day, Value, @tDate), 
-	DATEADD(Day, Value, @tDate), Basic.[MiladiTOShamsi](DATEADD(Day, Value, @tDate)), Replace(Basic.[MiladiTOShamsi](DATEADD(Day, Value, @tDate)), '/', '')
+	DATEADD(Day, Value, @tDate), [Basic].[MiladiTOShamsi](DATEADD(Day, Value, @tDate)), Replace(Basic.[MiladiTOShamsi](DATEADD(Day, Value, @tDate)), '/', '')
 From GENERATE_SERIES(0, 10000)
 Go
-Select top(10) * From Basic.DimDate
+Select top(10) * From [Basic].DimDate
 --Select DATENAME(DW, getdate())
-Update [basic].[DimDate] Set 
+Update [Basic].[DimDate] Set 
        [GregorianDayNumberOfWeek]=DATEPART(DW, DateKey)
       ,[GregorianDayNumberOfMonth]=Day(DateKey)
       ,[GregorianDayNumberOfYear]=DATEPART(dayofyear, DateKey)
@@ -607,8 +614,8 @@ Update [basic].[DimDate] Set
       --,[GregorianMonthName]=FORMAT(DateKey, 'MMMM')
       ,[GregorianMonthNumberOfYear]=Month(DateKey)
       ,[GregorianYear]=Year(DateKey)
-      --,[PersianDateKey]=Replace([dbo].[MiladiTOShamsi](FullDateAlternateKey), '/', '')
-      --,[PersianDate]=[dbo].[MiladiTOShamsi](FullDateAlternateKey)
+      --,[PersianDateKey]=Replace([Basic].[MiladiTOShamsi](FullDateAlternateKey), '/', '')
+      --,[PersianDate]=[Basic].[MiladiTOShamsi](FullDateAlternateKey)
       ,[PersianDayNumberOfWeek]=Case When DATEPART(DW, DateKey)=7 Then 1 ELSE DATEPART(DW, DateKey)+1 End
 	  ,[PersianDayNumberOfWeekDesc]=7-(Case When DATEPART(DW, DateKey)=7 Then 1 ELSE DATEPART(DW, DateKey)+1 End)
       ,[PersianDayNumberOfMonth]=Substring(Basic.[MiladiTOShamsi](DateKey), 9, 2)
@@ -640,17 +647,17 @@ Select DATEPART(DW, DateAdd(Day, Value, GETDATE()))
 From Generate_Series(0, 8)
 Go
 Select * 
-From basic.DimDayNameOfWeek
+From [Basic].DimDayNameOfWeek
 Go
 Select * 
-From basic.DimDate
+From [Basic].DimDate
 Where [isHoliday] is null
 Go
 sp_spaceused 'basic.DimDate'
 Go
 Update d Set isHoliday=do.isHoliday
-From basic.DimDate d
-Join basic.DimDateOccasion do
+From [Basic].DimDate d
+Join [Basic].DimDateOccasion do
 	ON d.DateKey = do.DateKey
 Where do.isHoliday=1
 Go
@@ -659,12 +666,12 @@ SELECT
     max_length AS max_bytes
 FROM sys.types; 
 Go
-ALTER INDEX IXU_dimDate_DateKey ON [basic].[DimDate] Rebuild
+ALTER INDEX IXU_dimDate_DateKey ON [Basic].[DimDate] Rebuild
 With(ONLINE=ON, FillFactor=100)
 Go
 Update d set isHoliday=1
-From basic.DimDate d
-Join basic.DimDateOccasion do
+From [Basic].DimDate d
+Join [Basic].DimDateOccasion do
 	ON d.DateKey = do.DateKey
 Where do.isHoliday=1
 Go
@@ -672,13 +679,13 @@ Go
 --From [finance].[Invoice] v
 --Join dbtest3.basic.DimDate d 
 --	ON d.DateKey = v.CreateDate
---Join dbtest3.[basic].[DimPersianMonth] dp
+--Join dbtest3.[Basic].[DimPersianMonth] dp
 --	ON d.PersianMonthNumberOfYear = dp.ID
 --Go
---Select * From [dbo].[tbl_fact_financial_payment]
+--Select * From [Basic].[tbl_fact_financial_payment]
 --Go
---Select * From [basic].[DimDate]
+--Select * From [Basic].[DimDate]
 Go
-Alter Table [basic].[DimDate] Rebuild 
+Alter Table [Basic].[DimDate] REBUILD 
 Go
-sp_spaceused '[basic].[DimDate]'
+SP_SPACEUSED '[Basic].[DimDate]'

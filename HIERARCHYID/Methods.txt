@@ -1,0 +1,3 @@
+GetRoot()
+GetDescendant
+IsDescendantOf
